@@ -7,12 +7,20 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
 import imageUrl from './img/close.png';
+
 const searchForm = document.getElementById('search-form');
 const searchInput = document.getElementById('search-input');
 const loader = document.getElementById('loader');
-loader.classList.add('loader');
+const gallery = document.getElementById('gallery');
 
+loader.classList.add('loader');
 loader.style.display = 'none';
+
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionsDelay: 250,
+});
+
 searchForm.addEventListener('submit', function (event) {
   event.preventDefault();
   const searchTerm = searchInput.value.trim();
@@ -33,30 +41,26 @@ searchForm.addEventListener('submit', function (event) {
   }
 
   loader.style.display = 'inline-block';
-  setTimeout(() => {
-    loader.style.display = 'none';
-  }, 5000);
 
   fetchImages(searchTerm)
     .then(data => {
-      setTimeout(() => {
-        loader.style.display = 'none';
-      }, 2000);
-      setTimeout(() => {
-        displayImages(data.hits);
-        initializeLightbox();
-      }, 3000);
+      loader.style.display = 'none';
+      displayImages(data.hits);
+      lightbox.refresh();
     })
     .catch(error => {
       loader.style.display = 'none';
+      iziToast.error({
+        title: 'Error',
+        message: 'Failed to fetch images. Please try again.',
+        position: 'topRight',
+        titleColor: '#fff',
+        titleSize: '16px',
+        backgroundColor: 'red',
+        messageColor: 'white',
+        iconUrl: imageUrl,
+        theme: 'dark',
+      });
     });
-
   searchForm.reset();
 });
-function initializeLightbox() {
-  const lightbox = new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',
-    captionsDelay: 250,
-  });
-  lightbox.refresh();
-}

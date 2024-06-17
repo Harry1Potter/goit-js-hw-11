@@ -2,7 +2,6 @@ import iziToast from 'izitoast';
 const gallery = document.getElementById('gallery');
 
 export function displayImages(images) {
-  gallery.innerHTML = '';
 
   if (images.length === 0) {
     iziToast.info({
