@@ -23,6 +23,7 @@ const lightbox = new SimpleLightbox('.gallery a', {
 
 searchForm.addEventListener('submit', function (event) {
   event.preventDefault();
+  gallery.innerHTML = '';
   const searchTerm = searchInput.value.trim();
 
   if (searchTerm === '') {
